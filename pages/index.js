@@ -1,10 +1,45 @@
 import { Box, Button, Text, TextField, Image } from '@skynexui/components'
-import {useState} from 'react';
-import {useRouter} from 'next/router'
+import { useState } from 'react'
+import { useRouter } from 'next/router'
+import Axios from 'axios'
 
 import appConfig from '../config.json'
 
 
+//Criar perfis para quando não há o retorno esperado pela API do github
+const usuarioNaoEncontrado = { 
+  nome: "Usuário não Encontrado", 
+  avatar: "https://www.placecage.com/166/166" 
+}
+
+const apiDoGithubCaiu = {
+  nome: "A API do Github Caiu :(",
+  avatar: "https://www.placecage.com/166/166" 
+}
+
+function getUser(user, setUsuario) {
+  if(user.length > 2){
+    Axios.get(`https://api.github.com/users/${user}`)
+      .then(res => {console.log("ue",res);
+        setUsuario({
+          nome: res.data.name,
+          avatar: res.data.avatar_url,
+          sucesso: true
+        })
+      })
+      .catch(error => {console.log("uwe",error);
+        if(error.response.status == 403){
+          setUsuario(apiDoGithubCaiu);
+        }
+        else{
+          setUsuario(usuarioNaoEncontrado)
+        }
+        })
+  }
+  else{
+    () => setUsuario(usuarioNaoEncontrado); //dentro de uma função becouse of yes
+  }
+}
 
 function Title(props) {
   const Tag = props.tag || "h1"
@@ -21,7 +56,10 @@ function Title(props) {
 
 export default function PaginaInicial() {
   const [username, setUsername] = useState('felipejardim');
+  const [usuario, setUsuario] = useState(usuarioNaoEncontrado);
   const roteamento = useRouter();
+  
+  getUser(username, setUsuario); //iniciliza o Usuário
 
   return (
     <>
@@ -76,7 +114,11 @@ export default function PaginaInicial() {
                 },
               }}
               value={username}
-              onChange={e => setUsername(e.target.value)}
+              onChange={e => {
+                setUsername(e.target.value);
+                getUser(username, setUsuario);
+              }}
+              placeholder='Informe seu usuario do Github'
             />
             <Button
               type='submit'
@@ -114,7 +156,7 @@ export default function PaginaInicial() {
                 borderRadius: '50%',
                 marginBottom: '16px',
               }}
-              src={`https://github.com/${username}.png`}
+              src={usuario.avatar}
             />
             <Text
               variant="body4"
@@ -125,7 +167,7 @@ export default function PaginaInicial() {
                 borderRadius: '1000px'
               }}
             >
-              {username}
+              {usuario.nome}
             </Text>
           </Box>
           {/* Photo Area */}
