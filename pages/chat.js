@@ -56,7 +56,7 @@ export default function ChatPage() {
                     }}
                 >
 
-                    <MessageList mensagens={listaMensagens} />
+                    <MessageList mensagens={listaMensagens} setLista={setListaMensagens} />
 
                     <Box
                         as="form"
@@ -87,6 +87,17 @@ export default function ChatPage() {
                                 marginRight: '12px',
                                 color: appConfig.theme.colors.neutrals[200],
                             }}
+                        />
+                        <Button
+                            iconName='arrowRight'
+                            buttonColors={{
+                                contrastColor: appConfig.theme.colors.neutrals["000"],
+                                mainColor: appConfig.theme.colors.primary[500],
+                                mainColorLight: appConfig.theme.colors.primary[400],
+                                mainColorStrong: appConfig.theme.colors.primary[600],
+                            }}
+
+                            onClick={() => handleNovaMensagem(mensagem)}
                         />
                     </Box>
                 </Box>
@@ -141,6 +152,17 @@ function MessageList(props) {
                             }
                         }}
                     >
+                        <Button
+                            iconName='FaTrashAlt'
+                            variant='tertiary'
+                            colorVariant='dark'
+                            styleSheet={{
+                                float: 'right',
+                            }}
+                            onClick={() => {
+                                props.setLista([...props.mensagens.filter(item => item.id != mensagem.id)])
+                            }}
+                        />
                         <Box
                             styleSheet={{
                                 marginBottom: '8px',
