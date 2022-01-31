@@ -1,5 +1,5 @@
 import { Box, Button, Text, TextField, Image } from '@skynexui/components'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useRouter } from 'next/router'
 import Axios from 'axios'
 
@@ -7,39 +7,25 @@ import appConfig from '../config.json'
 
 
 //Criar perfis para quando não há o retorno esperado pela API do github
-const usuarioNaoEncontrado = { 
-  nome: "Usuário não Encontrado", 
-  avatar: "https://www.placecage.com/166/166" 
+const usuarioNaoEncontrado = {
+  id: -1,
+  nome: "Usuário não Encontrado",
+  avatar: "https://www.placecage.com/166/166"
 }
 
 const apiDoGithubCaiu = {
+  id: -2,
   nome: "A API do Github Caiu :(",
-  avatar: "https://www.placecage.com/166/166" 
+  avatar: "https://www.placecage.com/166/166"
 }
 
-function getUser(user, setUsuario) {
-  if(user.length > 2){
-    Axios.get(`https://api.github.com/users/${user}`)
-      .then(res => {console.log("ue",res);
-        setUsuario({
-          nome: res.data.name,
-          avatar: res.data.avatar_url,
-          sucesso: true
-        })
-      })
-      .catch(error => {console.log("uwe",error);
-        if(error.response.status == 403){
-          setUsuario(apiDoGithubCaiu);
-        }
-        else{
-          setUsuario(usuarioNaoEncontrado)
-        }
-        })
-  }
-  else{
-    () => setUsuario(usuarioNaoEncontrado); //dentro de uma função becouse of yes
-  }
+const insiraMaisCaracteres = {
+  id: -3,
+  nome: "Insira mais letras para pesquisar",
+  avatar: "https://www.placecage.com/166/166"
 }
+
+
 
 function Title(props) {
   const Tag = props.tag || "h1"
@@ -55,11 +41,40 @@ function Title(props) {
 }
 
 export default function PaginaInicial() {
-  const [username, setUsername] = useState('felipejardim');
-  const [usuario, setUsuario] = useState(usuarioNaoEncontrado);
+  const [username, setUsername] = useState('');
+  const [usuario, setUsuario] = useState(insiraMaisCaracteres);
   const roteamento = useRouter();
-  
-  getUser(username, setUsuario); //iniciliza o Usuário
+
+  function getUser(username) {
+    if (username.length > 2) {
+      Axios.get(`https://api.github.com/users/${username}`)
+        .then(res => {
+          setUsuario(
+             {
+                id: res.data.id,
+                nome: res.data.name,
+                avatar: res.data.avatar_url
+              });
+        })
+        .catch(error => {
+          if (error.response.status == 403) {
+            setUsuario(apiDoGithubCaiu)
+          }
+          else {
+            setUsuario(usuarioNaoEncontrado)
+          }
+        })
+    }
+    else {
+      setUsuario(insiraMaisCaracteres)
+    }
+  }
+
+  useEffect(() => {
+    getUser(username)
+    console.log(usuario)
+
+  }, [username]);
 
   return (
     <>
@@ -89,7 +104,7 @@ export default function PaginaInicial() {
           {/* Formulário */}
           <Box
             as="form"
-            onSubmit={e=>{
+            onSubmit={e => {
               e.preventDefault();
               roteamento.push("/chat")
             }}
@@ -116,7 +131,7 @@ export default function PaginaInicial() {
               value={username}
               onChange={e => {
                 setUsername(e.target.value);
-                getUser(username, setUsuario);
+                getUser(username);
               }}
               placeholder='Informe seu usuario do Github'
             />
