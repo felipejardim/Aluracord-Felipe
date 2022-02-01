@@ -1,8 +1,10 @@
 import { Box, Text, TextField, Image, Button } from '@skynexui/components';
 import React from 'react';
-import { createClient } from '@supabase/supabase-js'
+import { useRouter } from 'next/router';
+import { createClient, SupabaseClient } from '@supabase/supabase-js';
 
 import appConfig from '../config.json';
+import { ButtonSendSticker } from '../src/components/ButtonSendSticker';
 
 //DESAFIO AULA4- criar mensagem de loading e onMouseOver foto do user da msg, mostrar perfil da pessoa
 
@@ -12,24 +14,38 @@ export default function ChatPage() {
     // talvez exista uma forma melhor do que utilizar NEXT_PUBLIC_VAR, mas por hora vamos nessa
     const supabaseCliente = createClient(process.env.NEXT_PUBLIC_SUPABASE_URL, process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY);
 
+    function escutaMensagensEmTempoReal(callback) {
+        return supabaseCliente.from('mensagens').on('INSERT', (res) => {
+            callback(res.new);
+        }).subscribe();
+    }
+
+
     const [mensagem, setMensagem] = React.useState('');
     const [listaMensagens, setListaMensagens] = React.useState([])
 
+    const roteamento = useRouter();
+    const username = roteamento.query.username;
+
+
     React.useEffect(() => {
-    supabaseCliente.from('mensagens').select(`*`).order('id',{ascending:false}).then(({data}) => {console.log('res', data); setListaMensagens(data)})
+        supabaseCliente.from('mensagens').select(`*`).order('id', { ascending: false }).then(({ data }) => { console.log('res', data); setListaMensagens(data) })
+
+        escutaMensagensEmTempoReal((novaMensagem)=>{setListaMensagens((lista)=>[novaMensagem, ...lista]);
+        });
     }, [])
 
     function handleNovaMensagem(novaMensagem) {
         const mensagem = {
-            de: "seila",
+            de: username,
             texto: novaMensagem,
         }
 
         supabaseCliente.from('mensagens').insert([mensagem])
-            .then(({data}) => {
-                setListaMensagens([data[0], ...listaMensagens]);
+            .then(({ data }) => {
+                // ( ͡° ͜ʖ ͡°)
             });
-        
+
         setMensagem('');
     }
     // ./Sua lógica vai aqui
@@ -103,6 +119,11 @@ export default function ChatPage() {
                                 color: appConfig.theme.colors.neutrals[200],
                             }}
                         />
+
+                        <ButtonSendSticker
+                            onStickerClick={(sticker) => { handleNovaMensagem(`:sticker: ${sticker}`) }}
+                        />
+
                         <Button
                             iconName='arrowRight'
                             buttonColors={{
@@ -207,7 +228,11 @@ function MessageList(props) {
                                 {(new Date().toLocaleDateString())}
                             </Text>
                         </Box>
-                        {mensagem.texto}
+                        {mensagem.texto.startsWith(':sticker: ') ? (
+                            <Image src={mensagem.texto.replace(':sticker: ', '')} />
+                        ) : (
+                            mensagem.texto
+                        )}
                     </Text>
                 )
             })}
