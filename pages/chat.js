@@ -1,20 +1,35 @@
 import { Box, Text, TextField, Image, Button } from '@skynexui/components';
 import React from 'react';
+import { createClient } from '@supabase/supabase-js'
+
 import appConfig from '../config.json';
+
+//DESAFIO AULA4- criar mensagem de loading e onMouseOver foto do user da msg, mostrar perfil da pessoa
 
 export default function ChatPage() {
     // Sua lógica vai aqui
+    // url e senha do backend sendo carregado através das variaveis de ambiente configuradas no arquivo .env.local ou nas configs do servidor do frontend
+    // talvez exista uma forma melhor do que utilizar NEXT_PUBLIC_VAR, mas por hora vamos nessa
+    const supabaseCliente = createClient(process.env.NEXT_PUBLIC_SUPABASE_URL, process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY);
 
     const [mensagem, setMensagem] = React.useState('');
     const [listaMensagens, setListaMensagens] = React.useState([])
 
+    React.useEffect(() => {
+    supabaseCliente.from('mensagens').select(`*`).order('id',{ascending:false}).then(({data}) => {console.log('res', data); setListaMensagens(data)})
+    }, [])
+
     function handleNovaMensagem(novaMensagem) {
         const mensagem = {
-            id: listaMensagens.length + 1,
             de: "seila",
             texto: novaMensagem,
         }
-        setListaMensagens([mensagem, ...listaMensagens]);
+
+        supabaseCliente.from('mensagens').insert([mensagem])
+            .then(({data}) => {
+                setListaMensagens([data[0], ...listaMensagens]);
+            });
+        
         setMensagem('');
     }
     // ./Sua lógica vai aqui
@@ -176,7 +191,7 @@ function MessageList(props) {
                                     display: 'inline-block',
                                     marginRight: '8px',
                                 }}
-                                src={`https://github.com/vanessametonini.png`}
+                                src={`https://github.com/${mensagem.de}.png`}
                             />
                             <Text tag="strong">
                                 {mensagem.de}
