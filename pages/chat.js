@@ -29,6 +29,7 @@ export default function ChatPage() {
 
 
     React.useEffect(() => {
+        console.log("aqui")
         supabaseCliente.from('mensagens').select(`*`).order('id', { ascending: false }).then(({ data }) => { console.log('res', data); setListaMensagens(data) })
 
         escutaMensagensEmTempoReal((novaMensagem)=>{setListaMensagens((lista)=>[novaMensagem, ...lista]);
@@ -44,9 +45,15 @@ export default function ChatPage() {
         supabaseCliente.from('mensagens').insert([mensagem])
             .then(({ data }) => {
                 // ( ͡° ͜ʖ ͡°)
+                console.log("insert")
             });
 
+    }
+
+    function deletarMensagem(id) {
+        supabaseCliente.from('mensagens').delete().match({id: id}).then(()=>{console.log("delete")});
         setMensagem('');
+
     }
     // ./Sua lógica vai aqui
     return (
@@ -87,7 +94,7 @@ export default function ChatPage() {
                     }}
                 >
 
-                    <MessageList mensagens={listaMensagens} setLista={setListaMensagens} />
+                    <MessageList mensagens={listaMensagens} setLista={setListaMensagens} deletar={deletarMensagem}/>
 
                     <Box
                         as="form"
@@ -191,11 +198,12 @@ function MessageList(props) {
                         <Button
                             iconName='FaTrashAlt'
                             variant='tertiary'
-                            colorVariant='dark'
+                            colorVariant='light'
                             styleSheet={{
                                 float: 'right',
                             }}
                             onClick={() => {
+                                props.deletar(mensagem.id)
                                 props.setLista([...props.mensagens.filter(item => item.id != mensagem.id)])
                             }}
                         />
