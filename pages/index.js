@@ -6,27 +6,6 @@ import Axios from 'axios'
 import appConfig from '../config.json'
 
 
-//Criar perfis para quando não há o retorno esperado pela API do github
-const usuarioNaoEncontrado = {
-  id: -1,
-  nome: "Usuário não Encontrado",
-  avatar: "https://www.placecage.com/166/166"
-}
-
-const apiDoGithubCaiu = {
-  id: -2,
-  nome: "A API do Github Caiu :(",
-  avatar: "https://www.placecage.com/166/166"
-}
-
-const insiraMaisCaracteres = {
-  id: -3,
-  nome: "Insira mais letras para pesquisar",
-  avatar: "https://www.placecage.com/166/166"
-}
-
-
-
 function Title(props) {
   const Tag = props.tag || "h1"
   return (<>
@@ -42,7 +21,7 @@ function Title(props) {
 
 export default function PaginaInicial() {
   const [username, setUsername] = useState('');
-  const [usuario, setUsuario] = useState(insiraMaisCaracteres);
+  const [usuario, setUsuario] = useState(appConfig.defaultUsers.insiraMaisCaracteres);
   const roteamento = useRouter();
 
   function getUser(username) {
@@ -58,15 +37,15 @@ export default function PaginaInicial() {
         })
         .catch(error => {
           if (error.response.status == 403) {
-            setUsuario(apiDoGithubCaiu)
+            setUsuario(appConfig.defaultUsers.apiDoGithubCaiu)
           }
           else {
-            setUsuario(usuarioNaoEncontrado)
+            setUsuario(appConfig.defaultUsers.usuarioNaoEncontrado)
           }
         })
     }
     else {
-      setUsuario(insiraMaisCaracteres)
+      setUsuario(appConfig.defaultUsers.insiraMaisCaracteres)
     }
   }
 
