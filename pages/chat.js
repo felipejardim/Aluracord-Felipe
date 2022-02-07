@@ -51,11 +51,14 @@ export default function ChatPage() {
             texto: novaMensagem,
         }
 
-        supabaseCliente.from('mensagens').insert([mensagem])
-            .then(({ data }) => {
-                // ( ͡° ͜ʖ ͡°)
-                console.log("insert")
-            });
+        //impedir usuário de postar mensagem caso não haja usuário 
+        if(username){
+            supabaseCliente.from('mensagens').insert([mensagem])
+                .then(({ data }) => {
+                    // ( ͡° ͜ʖ ͡°)
+                    console.log("insert")
+                });
+        }
 
         setMensagem('');
     }

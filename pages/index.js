@@ -29,11 +29,11 @@ export default function PaginaInicial() {
       Axios.get(`https://api.github.com/users/${username}`)
         .then(res => {
           setUsuario(
-             {
-                id: res.data.id,
-                nome: res.data.name,
-                avatar: res.data.avatar_url
-              });
+            {
+              id: res.data.id,
+              nome: res.data.name,
+              avatar: res.data.avatar_url
+            });
         })
         .catch(error => {
           if (error.response.status == 403) {
@@ -85,7 +85,10 @@ export default function PaginaInicial() {
             as="form"
             onSubmit={e => {
               e.preventDefault();
-              roteamento.push("/chat?username="+username)
+              
+              if(usuario.id > 0){
+                roteamento.push("/chat?username=" + username);
+              }
             }}
             styleSheet={{
               display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
@@ -117,6 +120,7 @@ export default function PaginaInicial() {
             <Button
               type='submit'
               label='Entrar'
+              disabled={usuario.id < 0}
               fullWidth
               buttonColors={{
                 contrastColor: appConfig.theme.colors.neutrals["000"],
