@@ -15,8 +15,10 @@ export default function ChatPage() {
     const supabaseCliente = createClient(process.env.NEXT_PUBLIC_SUPABASE_URL, process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY);
 
     function escutaMensagensEmTempoReal(callback) {
-        return supabaseCliente.from('mensagens').on('INSERT', (res) => {
-            callback(res.new);
+        return supabaseCliente.from('mensagens').on('*', (res) => {
+            //informar as atualizações no console
+            console.log('att:', res);
+            callback(res);
         }).subscribe();
     }
 
@@ -29,10 +31,17 @@ export default function ChatPage() {
 
 
     React.useEffect(() => {
-        console.log("aqui")
-        supabaseCliente.from('mensagens').select(`*`).order('id', { ascending: false }).then(({ data }) => { console.log('res', data); setListaMensagens(data) })
+        supabaseCliente.from('mensagens').select(`*`).order('id', { ascending: false }).then(({ data }) => {
+            setListaMensagens(data)
+        })
 
-        escutaMensagensEmTempoReal((novaMensagem)=>{setListaMensagens((lista)=>[novaMensagem, ...lista]);
+        escutaMensagensEmTempoReal((res) => {
+            setListaMensagens((lista) => {
+                if (res.eventType == "INSERT")
+                    return [res.new, ...lista];
+                else if (res.eventType == "DELETE")
+                    return lista.filter(item => item.id != res.old.id);
+            });
         });
     }, [])
 
@@ -48,11 +57,13 @@ export default function ChatPage() {
                 console.log("insert")
             });
 
+        setMensagem('');
     }
 
     function deletarMensagem(id) {
-        supabaseCliente.from('mensagens').delete().match({id: id}).then(()=>{console.log("delete")});
-        setMensagem('');
+        supabaseCliente.from('mensagens').delete().match({ id: id }).then(() => { 
+            console.log("delete") 
+        });
 
     }
     // ./Sua lógica vai aqui
@@ -94,7 +105,7 @@ export default function ChatPage() {
                     }}
                 >
 
-                    <MessageList mensagens={listaMensagens} setLista={setListaMensagens} deletar={deletarMensagem}/>
+                    <MessageList mensagens={listaMensagens} setLista={setListaMensagens} deletar={deletarMensagem} />
 
                     <Box
                         as="form"
@@ -110,7 +121,6 @@ export default function ChatPage() {
                                 if (e.key == "Enter") {
                                     e.preventDefault();
                                     handleNovaMensagem(mensagem);
-                                    console.log(listaMensagens)
                                 }
                             }}
                             placeholder="Insira sua mensagem aqui..."
