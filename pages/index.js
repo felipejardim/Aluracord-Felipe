@@ -33,9 +33,9 @@ export default function PaginaInicial() {
               id: res.data.id,
               nome: res.data.name,
               avatar: res.data.avatar_url,
-              followers: 11,
-              following: 27,
-              public_repos: 8,
+              followers: res.data.followers,
+              following: res.data.following,
+              public_repos: res.data.public_repos,
               buttonDisabled: false
             });
         })
@@ -178,6 +178,7 @@ export default function PaginaInicial() {
                 gap: '5px'
               }}>
               <Box
+              title="Seguidores"
                 styleSheet={{
                   color: appConfig.theme.colors.neutrals[200],
                   backgroundColor: appConfig.theme.colors.neutrals[900],
@@ -188,10 +189,11 @@ export default function PaginaInicial() {
                 }}
               >
                 <Icon name="FaUser" size="1.2ch" />
-                <Text variant='body4'>09</Text>
+                <Text variant='body4'>{usuario.followers}</Text>
               </Box>
 
               <Box
+              title="Seguindo"
                 styleSheet={{
                   color: appConfig.theme.colors.neutrals[200],
                   backgroundColor: appConfig.theme.colors.neutrals[900],
@@ -202,10 +204,11 @@ export default function PaginaInicial() {
                 }}
               >
                 <Icon name="FaUser" size="1.2ch" />
-                <Text variant='body4'>07</Text>
+                <Text variant='body4'>{usuario.following}</Text>
               </Box>
 
               <Box
+              title="Repositórios"
                 styleSheet={{
                   color: appConfig.theme.colors.neutrals[200],
                   backgroundColor: appConfig.theme.colors.neutrals[900],
@@ -217,7 +220,7 @@ export default function PaginaInicial() {
                 }}
               >
                 <Icon name="FaCode" size="1.2ch" styleSheet={{ marginBottom: '5px' }} />
-                <Text variant='body4'>04</Text>
+                <Text variant='body4'>{usuario.public_repos}</Text>
               </Box>
             </Box>
           </Box>
