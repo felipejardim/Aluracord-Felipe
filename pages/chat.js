@@ -52,7 +52,7 @@ export default function ChatPage() {
         }
 
         //impedir usuário de postar mensagem caso não haja usuário 
-        if(username){
+        if (username) {
             supabaseCliente.from('mensagens').insert([mensagem])
                 .then(({ data }) => {
                     // ( ͡° ͜ʖ ͡°)
@@ -64,8 +64,8 @@ export default function ChatPage() {
     }
 
     function deletarMensagem(id) {
-        supabaseCliente.from('mensagens').delete().match({ id: id }).then(() => { 
-            console.log("delete") 
+        supabaseCliente.from('mensagens').delete().match({ id: id }).then(() => {
+            console.log("delete")
         });
 
     }
@@ -117,17 +117,7 @@ export default function ChatPage() {
                             alignItems: 'center',
                         }}
                     >
-                        <TextField
-                            value={mensagem}
-                            onChange={e => { setMensagem(e.target.value) }}
-                            onKeyPress={e => {
-                                if (e.key == "Enter") {
-                                    e.preventDefault();
-                                    handleNovaMensagem(mensagem);
-                                }
-                            }}
-                            placeholder="Insira sua mensagem aqui..."
-                            type="textarea"
+                        <Box
                             styleSheet={{
                                 width: '100%',
                                 border: '0',
@@ -137,24 +127,50 @@ export default function ChatPage() {
                                 backgroundColor: appConfig.theme.colors.neutrals[800],
                                 marginRight: '12px',
                                 color: appConfig.theme.colors.neutrals[200],
+                                display: 'flex',
+                                alignItems: 'center'
                             }}
-                        />
+                        >
+                            <TextField
+                                value={mensagem}
+                                onChange={e => { setMensagem(e.target.value) }}
+                                onKeyPress={e => {
+                                    if (e.key == "Enter") {
+                                        e.preventDefault();
+                                        handleNovaMensagem(mensagem);
+                                    }
+                                }}
+                                placeholder="Insira sua mensagem aqui..."
+                                type="textarea"
+                                styleSheet={{
+                                    width: '100%',
+                                    border: '0',
+                                    resize: 'none',
+                                    borderRadius: '5px',
+                                    padding: '6px 8px',
+                                    backgroundColor: appConfig.theme.colors.neutrals[800],
+                                    marginRight: '12px',
+                                    color: appConfig.theme.colors.neutrals[200],
+                                }}
+                            />
+                            <Button
+                                iconName='arrowRight'
+                                variant='tertiary'
+                                buttonColors={{
+                                    contrastColor: appConfig.theme.colors.neutrals["000"],
+                                    mainColor: appConfig.theme.colors.primary[500],
+                                    mainColorLight: appConfig.theme.colors.primary[400],
+                                    mainColorStrong: appConfig.theme.colors.primary[600],
+                                }}
+
+                                onClick={() => handleNovaMensagem(mensagem)}
+                            />
+                        </Box>
 
                         <ButtonSendSticker
                             onStickerClick={(sticker) => { handleNovaMensagem(`:sticker: ${sticker}`) }}
                         />
 
-                        <Button
-                            iconName='arrowRight'
-                            buttonColors={{
-                                contrastColor: appConfig.theme.colors.neutrals["000"],
-                                mainColor: appConfig.theme.colors.primary[500],
-                                mainColorLight: appConfig.theme.colors.primary[400],
-                                mainColorStrong: appConfig.theme.colors.primary[600],
-                            }}
-
-                            onClick={() => handleNovaMensagem(mensagem)}
-                        />
                     </Box>
                 </Box>
             </Box>
