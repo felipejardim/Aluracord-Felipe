@@ -72,19 +72,22 @@
         "usuarioNaoEncontrado": {
             "id": -1,
             "nome": "Usuário não Encontrado",
-            "avatar": "https://www.placecage.com/166/166"
+            "avatar": "https://www.placecage.com/166/166",
+            "buttonDisabled": true
           },
           
           "apiDoGithubCaiu": {
             "id": -2,
             "nome": "A API do Github Caiu :(",
-            "avatar": "https://www.placecage.com/166/166"
+            "avatar": "https://www.placecage.com/166/166",
+            "buttonDisabled": true
           },
           
           "insiraMaisCaracteres": {
             "id": -3,
             "nome": "Insira mais letras para pesquisar",
-            "avatar": "https://www.placecage.com/166/166"
+            "avatar": "https://www.placecage.com/166/166",
+            "buttonDisabled": true
           }
     }
 }

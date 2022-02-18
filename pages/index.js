@@ -35,7 +35,8 @@ export default function PaginaInicial() {
               avatar: res.data.avatar_url,
               followers: 11,
               following: 27,
-              public_repos: 8
+              public_repos: 8,
+              buttonDisabled: false
             });
         })
         .catch(error => {
@@ -123,7 +124,7 @@ export default function PaginaInicial() {
             <Button
               type='submit'
               label='Entrar'
-              disabled={usuario.id < 0}
+              disabled={usuario.buttonDisabled}
               fullWidth
               buttonColors={{
                 contrastColor: appConfig.theme.colors.neutrals["000"],
