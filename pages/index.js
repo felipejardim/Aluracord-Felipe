@@ -171,11 +171,12 @@ export default function PaginaInicial() {
             >
               {usuario.nome}
             </Text>
-            <Box styleSheet={{
-              marginTop:'5px',
-              display: 'flex',
-              gap:'5px'
-            }}>
+            <Box
+              styleSheet={{
+                marginTop: '5px',
+                display: usuario.id > 0 ? 'flex' : 'none',
+                gap: '5px'
+              }}>
               <Box
                 styleSheet={{
                   color: appConfig.theme.colors.neutrals[200],
@@ -212,7 +213,7 @@ export default function PaginaInicial() {
                   borderRadius: '1000px',
                   display: 'flex',
                   gap: '5px',
-                  
+
                 }}
               >
                 <Icon name="FaCode" size="1.2ch" styleSheet={{ marginBottom: '5px' }} />
