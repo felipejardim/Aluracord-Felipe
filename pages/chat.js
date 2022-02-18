@@ -239,6 +239,8 @@ function MessageList(props) {
                         <Box
                             styleSheet={{
                                 marginBottom: '8px',
+                                display:'flex',
+                                alignItems: 'center'
                             }}
                         >
                             <Image
@@ -251,7 +253,7 @@ function MessageList(props) {
                                 }}
                                 src={`https://github.com/${mensagem.de}.png`}
                             />
-                            <Text tag="strong">
+                            <Text tag="strong" styleSheet={{alignSelf:'end'}}>
                                 {mensagem.de}
                             </Text>
                             <Text
@@ -259,10 +261,11 @@ function MessageList(props) {
                                     fontSize: '10px',
                                     marginLeft: '8px',
                                     color: appConfig.theme.colors.neutrals[300],
+                                    alignSelf:'end'
                                 }}
                                 tag="span"
                             >
-                                {(new Date().toLocaleDateString())}
+                                {'em ' + (new Date().toLocaleDateString())}
                             </Text>
                         </Box>
                         {mensagem.texto.startsWith(':sticker: ') ? (
