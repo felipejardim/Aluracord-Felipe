@@ -207,6 +207,7 @@ function MessageList(props) {
                 flex: 1,
                 color: appConfig.theme.colors.neutrals["000"],
                 marginBottom: '16px',
+                overflowX: 'hidden'
             }}
         >
 
@@ -253,7 +254,7 @@ function MessageList(props) {
                                 }}
                                 src={`https://github.com/${mensagem.de}.png`}
                             />
-                            <Text tag="strong" styleSheet={{alignSelf:'end'}}>
+                            <Text tag="strong" styleSheet={{alignSelf:'end', fontSize: '13px'}}>
                                 {mensagem.de}
                             </Text>
                             <Text
