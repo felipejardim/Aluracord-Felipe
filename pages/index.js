@@ -1,4 +1,4 @@
-import { Box, Button, Text, TextField, Image } from '@skynexui/components'
+import { Box, Button, Text, TextField, Image, Icon } from '@skynexui/components'
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/router'
 import Axios from 'axios'
@@ -32,7 +32,10 @@ export default function PaginaInicial() {
             {
               id: res.data.id,
               nome: res.data.name,
-              avatar: res.data.avatar_url
+              avatar: res.data.avatar_url,
+              followers: 11,
+              following: 27,
+              public_repos: 8
             });
         })
         .catch(error => {
@@ -85,8 +88,8 @@ export default function PaginaInicial() {
             as="form"
             onSubmit={e => {
               e.preventDefault();
-              
-              if(usuario.id > 0){
+
+              if (usuario.id > 0) {
                 roteamento.push("/chat?username=" + username);
               }
             }}
@@ -167,6 +170,54 @@ export default function PaginaInicial() {
             >
               {usuario.nome}
             </Text>
+            <Box styleSheet={{
+              marginTop:'5px',
+              display: 'flex',
+              gap:'5px'
+            }}>
+              <Box
+                styleSheet={{
+                  color: appConfig.theme.colors.neutrals[200],
+                  backgroundColor: appConfig.theme.colors.neutrals[900],
+                  padding: '3px 5px',
+                  borderRadius: '1000px',
+                  display: 'flex',
+                  gap: '5px'
+                }}
+              >
+                <Icon name="FaUser" size="1.2ch" />
+                <Text variant='body4'>09</Text>
+              </Box>
+
+              <Box
+                styleSheet={{
+                  color: appConfig.theme.colors.neutrals[200],
+                  backgroundColor: appConfig.theme.colors.neutrals[900],
+                  padding: '3px 5px',
+                  borderRadius: '1000px',
+                  display: 'flex',
+                  gap: '5px'
+                }}
+              >
+                <Icon name="FaUser" size="1.2ch" />
+                <Text variant='body4'>07</Text>
+              </Box>
+
+              <Box
+                styleSheet={{
+                  color: appConfig.theme.colors.neutrals[200],
+                  backgroundColor: appConfig.theme.colors.neutrals[900],
+                  padding: '3px 5px',
+                  borderRadius: '1000px',
+                  display: 'flex',
+                  gap: '5px',
+                  
+                }}
+              >
+                <Icon name="FaCode" size="1.2ch" styleSheet={{ marginBottom: '5px' }} />
+                <Text variant='body4'>04</Text>
+              </Box>
+            </Box>
           </Box>
           {/* Photo Area */}
         </Box>
