@@ -240,7 +240,7 @@ function MessageList(props) {
                         <Box
                             styleSheet={{
                                 marginBottom: '8px',
-                                display:'flex',
+                                display: 'flex',
                                 alignItems: 'center'
                             }}
                         >
@@ -254,7 +254,7 @@ function MessageList(props) {
                                 }}
                                 src={`https://github.com/${mensagem.de}.png`}
                             />
-                            <Text tag="strong" styleSheet={{alignSelf:'end', fontSize: '13px'}}>
+                            <Text tag="strong" styleSheet={{ alignSelf: 'end', fontSize: '13px' }}>
                                 {mensagem.de}
                             </Text>
                             <Text
@@ -262,7 +262,7 @@ function MessageList(props) {
                                     fontSize: '10px',
                                     marginLeft: '8px',
                                     color: appConfig.theme.colors.neutrals[300],
-                                    alignSelf:'end'
+                                    alignSelf: 'end'
                                 }}
                                 tag="span"
                             >
@@ -270,7 +270,11 @@ function MessageList(props) {
                             </Text>
                         </Box>
                         {mensagem.texto.startsWith(':sticker: ') ? (
-                            <Image src={mensagem.texto.replace(':sticker: ', '')} />
+                            <Image src={mensagem.texto.replace(':sticker: ', '')}
+                                styleSheet={{
+                                    height:"200px"
+                                }}
+                            />
                         ) : (
                             mensagem.texto
                         )}
