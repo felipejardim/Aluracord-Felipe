@@ -38,7 +38,14 @@ export default function ChatPage() {
         escutaMensagensEmTempoReal((res) => {
             setListaMensagens((lista) => {
                 if (res.eventType == "INSERT")
-                    return [res.new, ...lista];
+                    return [...lista, res.new].sort((a,b)=>{
+                        if(a.id < b.id)
+                            return 1;
+                        if (a.id > b.id) {
+                            return -1;
+                        }
+                        return 0;
+                    });
                 else if (res.eventType == "DELETE")
                     return lista.filter(item => item.id != res.old.id);
             });
@@ -46,6 +53,7 @@ export default function ChatPage() {
     }, [])
 
     function handleNovaMensagem(novaMensagem) {
+        if(novaMensagem.length <=0) return;
         const mensagem = {
             de: username,
             texto: novaMensagem,
