@@ -266,7 +266,7 @@ function MessageList(props) {
                                 }}
                                 tag="span"
                             >
-                                {'em ' + (new Date().toLocaleDateString())}
+                                {'em ' + (new Date(mensagem.created_at).toLocaleString())}
                             </Text>
                         </Box>
                         {mensagem.texto.startsWith(':sticker: ') ? (
